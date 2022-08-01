@@ -49,8 +49,7 @@ generate_expected_values <- function(x=FALSE) {
       time=fit[[runno]]$time,
       objDf=fit[[runno]]$objDf)
   if (x) {
-    sink(paste0("values-n", .nlmixr, "-", .rxode2, "r", .rxode2,
-                "-", runno, "-", .os, ".R"))
+    sink(paste0("values-", .nlmixr, "-", runno, "-", .os, ".R"))
       on.exit(sink())
   }
   cat("expected_values[[runno]] <- ")
@@ -62,10 +61,8 @@ generate_expected_values <- function(x=FALSE) {
 genIfNeeded <- function(gen=TRUE) {
   .os <- .Platform$OS.type
   .nlmixr <- packageVersion("nlmixr2est")
-  .rxode2 <- packageVersion("rxode2")
   if (Sys.info()["sysname"]=="Darwin") .os <- "mac"
-  .ret <- paste0("values-n", .nlmixr, "-", .rxode2, "r", .rxode2,
-                 "-", runno, "-", .os, ".R")
+  .ret <- paste0("values-", .nlmixr, "-", runno, "-", .os, ".R")
   if (gen && !file.exists(.ret)) {
     generate_expected_values(TRUE)
   }
