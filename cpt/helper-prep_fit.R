@@ -3,7 +3,7 @@
 if (!exists("fit")) {
   fit <- list()
 }
-if (!exists("expected_values")){
+if (!exists("expected_values")) {
     expected_values <- list()
 }
 if (!exists("verbose_minimization")) verbose_minimization <- FALSE
@@ -17,8 +17,8 @@ default_control <-
     )
 
 
-defaultControl <- function(x){
-    if (x == "nlme"){
+defaultControl <- function(x) {
+    if (x == "nlme") {
         return(nlme::nlmeControl(
                    returnObject=TRUE,
                    msMaxiter = 100,
@@ -36,20 +36,21 @@ defaultTable <- tableControl(cwres=TRUE); ## CWRES needed for FOCEi likelihood
 
 generate_expected_values <- function(x=FALSE) {
   .os <- .Platform$OS.type;
-  .nlmixr <- packageVersion("nlmixr")
+  .nlmixr <- packageVersion("nlmixr2est")
+  .rxode2 <- packageVersion("rxode2")
   if (Sys.info()["sysname"]=="Darwin") .os <- "mac"
   ret <-
     list(
       lik=round(c(logLik(fit[[runno]]), AIC(fit[[runno]]), BIC(fit[[runno]])), 2),
       param=unname(signif(fixef(fit[[runno]]), 5)),
       stdev_param=unname(signif(as.numeric(VarCorr(fit[[runno]])[1:length(fixef(fit[[runno]])), "StdDev"]), 5)),
-      sigma=signif(fit[[runno]]$sigma, 5),
       parFixedDf=fit[[runno]]$parFixedDf,
       omega=fit[[runno]]$omega,
       time=fit[[runno]]$time,
       objDf=fit[[runno]]$objDf)
-  if (x){
-      sink(paste0("values-", .nlmixr, "-", runno, "-", .os, ".R"))
+  if (x) {
+    sink(paste0("values-n", .nlmixr, "-","-r", .rxode2,
+                "-", runno, "-", .os, ".R"))
       on.exit(sink());
   }
   cat("expected_values[[runno]] <- ")
@@ -58,13 +59,13 @@ generate_expected_values <- function(x=FALSE) {
 }
 
 
-genIfNeeded <- function(gen=TRUE){
-  .os <- .Platform$OS.type;
+genIfNeeded <- function(gen=TRUE) {
+  .os <- .Platform$OS.type
   .nlmixr <- packageVersion("nlmixr")
-    if (Sys.info()["sysname"]=="Darwin") .os <- "mac"
-    .ret <- paste0("values-", .nlmixr, "-", runno, "-", .os, ".R");
-    if (gen && !file.exists(.ret)){
-        generate_expected_values(TRUE);
-    }
-    return(.ret)
+  if (Sys.info()["sysname"]=="Darwin") .os <- "mac"
+  .ret <- paste0("values-", .nlmixr, "-", runno, "-", .os, ".R")
+  if (gen && !file.exists(.ret)) {
+    generate_expected_values(TRUE)
+  }
+  return(.ret)
 }

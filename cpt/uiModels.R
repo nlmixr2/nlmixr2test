@@ -6,14 +6,15 @@ options(RxODE.cache.directory="~/.rxCache")
 ## runModel <- "U048"; runEst <- "focei"; source("uiModels.R")
 ## runModel <- "U062"; runEst <- "focei"; source("uiModels.R")
 ## runEst <- "saem"; source("uiModels.R")
+## runEst <- "foceiLL"; source("uiModels.R")
 ## Use runModel to select one model to run.  ie
 ## runModel <- "U014" and then source the file
 ## Use runEst to select one estimation type ie
 ## runEst  <- "focei"
-library(nlmixr)
+library(nlmixr2)
 library(testthat)
 source("helper-prep_fit.R")
-one.compartment.IV.model <- function(){
+one.compartment.IV.model <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -40,7 +41,7 @@ one.compartment.IV.model <- function(){
     })
 }
 
-one.compartment.IV.model.solve <- function(){
+one.compartment.IV.model.solve <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -62,7 +63,7 @@ one.compartment.IV.model.solve <- function(){
     })
 }
 
-one.compartment.IV.MM.model <- function(){
+one.compartment.IV.MM.model <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
         lVM <- 7      #log Vmax (mg/hr)
@@ -91,7 +92,7 @@ one.compartment.IV.MM.model <- function(){
     })
 }
 
-one.compartment.IV.MM.model2 <- function(){
+one.compartment.IV.MM.model2 <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
         lVM <- 6.9    #log Vmax (mg/hr)
@@ -121,7 +122,7 @@ one.compartment.IV.MM.model2 <- function(){
 }
 
 
-one.compartment.oral.model <- function(){
+one.compartment.oral.model <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -177,7 +178,7 @@ one.compartment.oral.model.solve <- function(){
     })
 }
 
-one.compartment.oral.model2 <- function(){
+one.compartment.oral.model2 <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -208,7 +209,7 @@ one.compartment.oral.model2 <- function(){
     })
 }
 
-one.compartment.oral.model2.solve <- function(){
+one.compartment.oral.model2.solve <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -234,7 +235,7 @@ one.compartment.oral.model2.solve <- function(){
     })
 }
 
-one.compartment.oral.MM.model <- function(){
+one.compartment.oral.MM.model <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -268,7 +269,7 @@ one.compartment.oral.MM.model <- function(){
     })
 }
 
-two.compartment.IV.model <- function(){
+two.compartment.IV.model <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -306,7 +307,7 @@ two.compartment.IV.model <- function(){
     })
 }
 
-two.compartment.IV.model.solve <- function(){
+two.compartment.IV.model.solve <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -336,7 +337,7 @@ two.compartment.IV.model.solve <- function(){
     })
 }
 
-two.compartment.IV.MM.model <- function(){
+two.compartment.IV.MM.model <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -375,7 +376,7 @@ two.compartment.IV.MM.model <- function(){
     })
 }
 
-two.compartment.IV.MM.model2 <- function(){
+two.compartment.IV.MM.model2 <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -414,7 +415,7 @@ two.compartment.IV.MM.model2 <- function(){
     })
 }
 
-two.compartment.IV.MM.model3 <- function(){
+two.compartment.IV.MM.model3 <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
           # Simple numeric expressions are supported
@@ -453,7 +454,7 @@ two.compartment.IV.MM.model3 <- function(){
     })
 }
 
-two.compartment.oral.model <- function(){
+two.compartment.oral.model <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
         lCl <- 1.6      #log Cl (L/hr)
@@ -495,7 +496,7 @@ two.compartment.oral.model <- function(){
 
 
 
-two.compartment.oral.model.solve <- function(){
+two.compartment.oral.model.solve <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
         lCl <- 1.6      #log Cl (L/hr)
@@ -526,7 +527,7 @@ two.compartment.oral.model.solve <- function(){
     })
 }
 
-two.compartment.oral.MM.model <- function(){
+two.compartment.oral.MM.model <- function() {
     ini({ # Where initial conditions/variables are specified
           # '<-' or '=' defines population parameters
         lVM <- 7.1      #log Vmax (mg/hr)
@@ -569,36 +570,37 @@ two.compartment.oral.MM.model <- function(){
     })
 }
 
-require(dplyr);
+require(dplyr)
 
 nmModels <- (ls(pattern="[.]compartment[.]"))
-getModel <- function(cmt=1,oral=FALSE,mm=FALSE,extra="",solve=FALSE){
+
+getModel <- function(cmt=1,oral=FALSE,mm=FALSE,extra="",solve=FALSE) {
     m <- nmModels %>%
         stringr::str_subset(ifelse(cmt==1,"one","two")) %>%
         stringr::str_subset(ifelse(oral,"oral","IV"))
-    if (mm){
+    if (mm) {
         m <- m %>% stringr::str_subset("MM")
     } else {
         m <- m[!stringr::str_detect(m,"MM")];
     }
-    if (extra==""){
+    if (extra=="") {
         m <- m[!stringr::str_detect(m,"[23]")];
     } else {
         m <- m %>% stringr::str_subset(extra);
     }
-    if (solve){
+    if (solve) {
         m <- m[stringr::str_detect(m,"solve")];
     } else {
         m <- m[!stringr::str_detect(m,"solve")];
     }
-    if (length(m)!=1){
+    if (length(m)!=1) {
         return(NA_character_)
     } else {
         return(m)
     }
 }
 
-expandSolve <- function(x){
+expandSolve <- function(x) {
     .x1 <- as.data.frame(x)
     .x2 <- .x1
     .x1$solve <- FALSE
@@ -673,18 +675,18 @@ mod2 <- matrix(c(1, 1,FALSE, FALSE, FALSE, "SD",
     mutate(data=paste0(ifelse(oral,"Oral",ifelse(infusion, "Infusion","Bolus")),"_",
                        cmt,"CPT",ifelse(mm,"MM","")))
 
-if (exists("runModel", globalenv())){
+if (exists("runModel", globalenv())) {
     mod2 <- mod2 %>% filter(model==runModel)
 }
 
 ## opts <- c("focei", "saem", "nlme", "fo", "foi", "foce")
-opts <- c("focei", "nlme", "saem")
-if (exists("runEst", globalenv())){
+opts <- c("foceiLL", "focei", "nlme", "saem")
+if (exists("runEst", globalenv())) {
     opts <- runEst
 }
 env <- environment()
 
-ns <- loadNamespace("nlmixr")
+ns <- loadNamespace("nlmixr2data")
 
 os <- .Platform$OS.type ## On mac this is "unix"
 if (Sys.info()["sysname"]=="Darwin") os <- "mac"
@@ -692,7 +694,7 @@ if (Sys.info()["sysname"]=="Darwin") os <- "mac"
 for (opt in opts){
     for (i in seq_along(mod2$model)){
         with(mod2[i,],{
-            if ((solve & opt %in% c("nlme","saem")) | !solve){
+            if ((solve & opt %in% c("nlme","saem")) | !solve) {
                 .msg <- sprintf("%s: %s %s-compartment %s, %s%s",model,
                                 opt,
                                 ifelse(cmt==1,"one","two"),
@@ -704,54 +706,59 @@ for (opt in opts){
                                 ifelse(solve," (solved)",""))
                 message(.msg)
                 context(.msg)
-                runno <- paste0(model,"_",opt);
+                runno <- paste0(model,"_",opt)
                 assign("runno",runno,globalenv())
                 rds <- paste0(runno,"-", os, ".rds")
                 .rfile <- genIfNeeded(FALSE)
                 .success <- TRUE
-                if (file.exists(rds)){
-                    fit <- get("fit",envir=env);
-                    fit[[runno]] <- readRDS(rds);
+                if (file.exists(rds)) {
+                    fit <- get("fit",envir=env)
+                    fit[[runno]] <- readRDS(rds)
                     assign("fit",fit, envir=env)
-                } else if (file.exists(.rfile)){
+                } else if (file.exists(.rfile)) {
                     source(.rfile)
                 } else {
-                    nlmixrFn <- get(fn,envir=env);
-                    print(nlmixrFn)
-                    if (exists(data,env$ns)){
-                        datr <- get(data,env$ns)
-                    } else {
-                        datr <- read.csv(paste0("../../vignettes/",data,".csv"),header=TRUE,stringsAsFactors=FALSE)
-                    }
-                    if (subset=="SD"){
-                        dat <- datr[datr$SD == 1, ]
-                        dat <- dat[, names(dat) != "SS"];
-                    } else if (subset=="MD") {
-                        dat <- datr[datr$SD == 0, ]
-                        dat <- dat[, names(dat) != "SS"];
-                    } else if (subset=="full"){
-                        dat <- datr;
-                        dat <- dat[, names(dat) != "SS"];
-                    } else {
-                        dat <- datr[datr$SS != 99, ];
-                    }
-                    print(head(dat))
-                    fit <- get("fit",envir=env);
-                    if (Sys.getenv("RUN")!="false"){
-                        .fit <- try(nlmixr(nlmixrFn, dat, opt, control=defaultControl(opt), table=tableControl(cwres=TRUE)))
-                    } else {
-                        .fit <- try({stop("dumb")},silent=TRUE)
-                    }
-                    if (!inherits(.fit, "try-error")){
-                        fit[[runno]] <- .fit
-                        saveRDS(fit[[runno]],rds);
-                        assign("fit",fit, envir=env)
-                    } else {
-                        .success <- FALSE
-                    }
+                  nlmixrFn <- get(fn,envir=env)
+                  .opt <- opt
+                  if (opt == "foceiLL") {
+                    nlmixrFn <- nlmixrFn %>% model(cp ~ prop(prop.err) + dnorm())
+                    .opt <- "focei"
+                  }
+                  print(nlmixrFn)
+                  if (exists(data,env$ns)) {
+                    datr <- get(data,env$ns)
+                  } else {
+                    datr <- read.csv(paste0(data,".csv"),header=TRUE,stringsAsFactors=FALSE)
+                  }
+                  if (subset=="SD") {
+                    dat <- datr[datr$SD == 1, ]
+                    dat <- dat[, names(dat) != "SS"];
+                  } else if (subset=="MD") {
+                    dat <- datr[datr$SD == 0, ]
+                    dat <- dat[, names(dat) != "SS"];
+                  } else if (subset=="full") {
+                    dat <- datr
+                    dat <- dat[, names(dat) != "SS"]
+                  } else {
+                    dat <- datr[datr$SS != 99, ]
+                  }
+                  print(head(dat))
+                  fit <- get("fit",envir=env)
+                  if (Sys.getenv("RUN")!="false") {
+                    .fit <- try(nlmixr(nlmixrFn, dat, .opt, control=defaultControl(.opt), table=tableControl(cwres=TRUE)))
+                  } else {
+                    .fit <- try({stop("dumb")},silent=TRUE)
+                  }
+                  if (!inherits(.fit, "try-error")) {
+                    fit[[runno]] <- .fit
+                    saveRDS(fit[[runno]],rds)
+                    assign("fit",fit, envir=env)
+                  } else {
+                    .success <- FALSE
+                  }
                 }
-                if (.success){
-                    source(genIfNeeded())
+                if (.success) {
+                  source(genIfNeeded())
                 }
             }})
     }
