@@ -10,6 +10,7 @@ options(RxODE.cache.directory="~/.rxCache")
 ## Use runModel to select one model to run.  ie
 ## runModel <- "U014" and then source the file
 ## Use runEst to select one estimation type ie
+## runModel <- "U029"; "U046"
 ## runEst  <- "focei"
 library(nlmixr2)
 library(testthat)

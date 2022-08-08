@@ -60,6 +60,7 @@ readData <- function(nlmixrVersion=c(as.character(packageVersion("nlmixr2est")))
       .tmp2 <- paste0("BSV.", .tmp)
       .tmp3 <- paste0("SE.", .tmp)
       .tmp <- c(.tmp, .tmp2, .tmp3)
+      .covMethod <- .ret$covMethod
       .ret <- data.frame(t(c(.ret1, .ret2, .ret3)), time=sum(.ret$time))
       for(.f in .tmp){
         if (is.null(.ret[[.f]])) {
@@ -67,9 +68,12 @@ readData <- function(nlmixrVersion=c(as.character(packageVersion("nlmixr2est")))
         }
       }
       .ret <- cbind(.ret, data.frame(t(.c)))
+      .ret$covMethod <-.covMethod
       return(.ret)
     } else {
-      .out <- c("Cl", "Vc", "prop.err", "SE.Cl", "SE.Vc", "BSV.Cl", "BSV.Vc",  "VM", "KM", "Q", "Vp", "KA", "BSV.VM", "BSV.KM", "BSV.Q", "BSV.Vp",  "BSV.KA", "SE.VM", "SE.KM", "SE.Q", "SE.Vp", "SE.KA", "time");
+      .out <- c("Cl", "Vc", "prop.err", "SE.Cl", "SE.Vc", "BSV.Cl", "BSV.Vc",  "VM", "KM", "Q", "Vp",
+                "KA", "BSV.VM", "BSV.KM", "BSV.Q", "BSV.Vp",  "BSV.KA", "SE.VM", "SE.KM", "SE.Q",
+                "SE.Vp", "SE.KA", "time","covMethod")
       .ret <- cbind(data.frame(t(setNames(rep(NA, length(.out)), .out))),
                     data.frame(t(.c)))
       return(.ret)
@@ -121,8 +125,26 @@ f <- function(nlmixrVersion=c("1.1.1.3"), est=c("saem", "foceiLL", "focei", "nlm
             legend.position="none") +
       scale_x_continuous(breaks=.brk,labels=.lvl, minor_breaks=NULL) + 
       ylab(bsvLab)
+    
+    df2 <- ret %>% mutate(SE.VM = ifelse(covMethod=="r,s", SE.VM, NA),
+                          SE.KM = ifelse(covMethod=="r,s", SE.KM, NA),
+                          SE.Q  = ifelse(covMethod=="r,s", SE.Q, NA),
+                          SE.Vp = ifelse(covMethod=="r,s", SE.Vp, NA),
+                          SE.KA = ifelse(covMethod=="r,s", SE.KA, NA),
+                          SE.Cl = ifelse(covMethod=="r,s", SE.Cl, NA),
+                          SE.Vc = ifelse(covMethod=="r,s", SE.Vc, NA))
 
-    p3 <- ggplot(ret, aes_string("run2", paste0("SE.", var), color="by", group="by")) +
+    p3a <- ggplot(df2, aes_string("run2", paste0("SE.", var), color="by", group="by")) +
+      geom_point(size=3, alpha=0.5) +
+      geom_line(alpha=0.5, size=1.3) +
+      theme(axis.text.x = element_text(face="bold", angle=45, hjust=1),
+            axis.title.y=element_text(face="bold", size=14),
+            axis.title.x=element_blank(),
+            legend.position="none") +
+      scale_x_continuous(breaks=.brk, labels=.lvl, minor_breaks=NULL) + 
+      ylab(paste0("SE log ", ylab, " (r,s)"))
+
+    p3 <- ggplot(df2, aes_string("run2", paste0("SE.", var), color="by", group="by")) +
       geom_point(size=3, alpha=0.5) +
       geom_line(alpha=0.5, size=1.3) +
       theme(axis.text.x = element_text(face="bold", angle=45, hjust=1),
@@ -132,8 +154,8 @@ f <- function(nlmixrVersion=c("1.1.1.3"), est=c("saem", "foceiLL", "focei", "nlm
       scale_x_continuous(breaks=.brk, labels=.lvl, minor_breaks=NULL) + 
       ylab(paste0("SE log ", ylab))
 
-
-    grid.arrange(p1, p2, p3, ncol=1)
+    grid.arrange(p1, p2, ncol=1)
+    grid.arrange(p3a, p3, ncol=1)
   }
   suppressWarnings(.f())
   suppressWarnings(.f(var="Cl", tval=4, ylab="Cl (L/hr)", bsvLab="BSV Cl(%)"))
@@ -142,6 +164,19 @@ f <- function(nlmixrVersion=c("1.1.1.3"), est=c("saem", "foceiLL", "focei", "nlm
   suppressWarnings(.f(var="Q", tval=4.0, ylab="Vp (L/hr)", bsvLab="BSV Vp(%)"))
   suppressWarnings(.f(var="KM", tval=250, ylab="Km (mg/L)", bsvLab="BSV Km(%)"))
   suppressWarnings(.f(var="VM", tval=1000, ylab="Vmax (mg/hr)", bsvLab="BSV Vmax(%)"))
+
+  p1 <- ggplot(ret, aes_string("run2", "time", color="by")) +
+    geom_point(size=3, alpha=0.5) +
+    geom_line(alpha=0.5, size=1.3) +
+    theme(axis.text.x = element_text(face="bold", angle=45, hjust=1),
+          axis.title.y=element_text(face="bold", size=14),
+          axis.title.x=element_blank(),
+          legend.position="top") +
+    labs(color="") +
+    scale_x_continuous(breaks=.brk,labels=.lvl, minor_breaks=NULL) + 
+    ylab("Time") + xgxr::xgx_scale_y_log10()
+  plot(p1)
+
 }
 
 nlmixrVersion <- as.character(packageVersion("nlmixr2est"))

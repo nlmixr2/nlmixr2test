@@ -47,7 +47,8 @@ generate_expected_values <- function(x=FALSE) {
       parFixedDf=fit[[runno]]$parFixedDf,
       omega=fit[[runno]]$omega,
       time=fit[[runno]]$time,
-      objDf=fit[[runno]]$objDf)
+      objDf=fit[[runno]]$objDf,
+      covMethod=fit[[runno]]$covMethod)
   if (x) {
     sink(paste0("values-", .nlmixr, "-", runno, "-", .os, ".R"))
       on.exit(sink())
