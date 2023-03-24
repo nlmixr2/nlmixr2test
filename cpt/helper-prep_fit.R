@@ -21,7 +21,7 @@ defaultControl <- function(x) {
     if (x == "nlme") {
         return(nlme::nlmeControl(
                    returnObject=TRUE,
-                   msMaxiter = 100,
+                   msMaxIter = 100,
                    maxIter = 100,
                    pnlsMaxIter = 100,
                    msVerbose = verbose_minimization))
