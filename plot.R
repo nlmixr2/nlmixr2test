@@ -182,5 +182,15 @@ f <- function(nlmixrVersion=c("1.1.1.3"), est=c("saem", "foceiLL", "focei", "nlm
 nlmixrVersion <- as.character(packageVersion("nlmixr2est"))
 
 pdf("compare.pdf")
+
+f(nlmixrVersion, c("solve_saem", "saem"), "unix")
+
+f(nlmixrVersion, c("solve_focei", "focei"), "unix")
+
+f(nlmixrVersion, c("solve_nlme", "nlme"), "unix")
+
 f(nlmixrVersion, c("foceiLL", "focei"), "unix")
+
+f(nlmixrVersion, c("saem", "focei"), "unix")
+
 dev.off()

@@ -60,7 +60,8 @@ one.compartment.IV.model.solve <- function() {
     # The model uses the ini-defined variable names
     Vc <- exp(lVc + eta.Vc)
     Cl <- exp(lCl + eta.Cl)
-    linCmt() ~ prop(prop.err)
+    cp <- linCmt()
+    cp ~ prop(prop.err)
   })
 }
 
@@ -175,7 +176,8 @@ one.compartment.oral.model.solve <- function(){
     Cl <- exp(lCl + eta.Cl)
     Vc <- exp(lVc + eta.Vc)
     KA <- exp(lKA + eta.KA)
-    linCmt() ~ prop(prop.err)
+    cp <- linCmt()
+    cp ~ prop(prop.err)
   })
 }
 
@@ -232,7 +234,8 @@ one.compartment.oral.model2.solve <- function() {
     Vc <- exp(lVc + eta.Vc)
     KA <- exp(lKA + eta.KA)
     # And is assumed to follow proportional error estimated by prop.err
-    linCmt() ~ prop(prop.err)
+    cp <- linCmt() 
+    cp ~ prop(prop.err)
   })
 }
 
@@ -334,7 +337,8 @@ two.compartment.IV.model.solve <- function() {
     Vp <- exp(lVp + eta.Vp)
     Q <- exp(lQ + eta.Q)
     # And is assumed to follow proportional error estimated by prop.err
-    linCmt() ~ prop(prop.err)
+    cp <- linCmt()
+    cp ~ prop(prop.err)
   })
 }
 
@@ -524,7 +528,8 @@ two.compartment.oral.model.solve <- function() {
     Q  <- exp(lQ + eta.Q)
     KA <- exp(lKA + eta.KA)
     # And is assumed to follow proportional error estimated by prop.err
-    linCmt() ~ prop(prop.err)
+    cp <- linCmt()
+    cp ~ prop(prop.err)
   })
 }
 
@@ -695,7 +700,7 @@ if (Sys.info()["sysname"]=="Darwin") os <- "mac"
 for (opt in opts){
   for (i in seq_along(mod2$model)){
     with(mod2[i,],{
-      if ((solve & opt %in% c("nlme","saem")) | !solve) {
+      if ((solve & opt %in% c("nlme","saem", "focei", "foceiLL")) | !solve) {
         .msg <- sprintf("%s: %s %s-compartment %s, %s%s",model,
                         opt,
                         ifelse(cmt==1,"one","two"),

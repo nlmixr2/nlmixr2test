@@ -1,5 +1,5 @@
 
-library(nlmixr)
+library(nlmixr2)
 
 one.compartment.oral.model <- function() {
   ini({
@@ -38,13 +38,13 @@ modX<-nlmixr(one.compartment.oral.model)
 
 
 do_nlmixrODE <- function(i, method="focei") {
-  .nlmixr <- as.character(packageVersion("nlmixr"))
+  .nlmixr <- as.character(packageVersion("nlmixr2est"))
   .os <- .Platform$OS.type;
-  .nlmixr <- packageVersion("nlmixr")
+  .nlmixr <- packageVersion("nlmixr2est")
   if (Sys.info()["sysname"]=="Darwin") .os <- "mac"
   file <- paste("sparse-", .nlmixr, "-", method, "-", i, "-", .os, ".R", sep = "");
   if (!file.exists(file)){
-    datr <- readRDS(paste0("bs_pr1_", i, ".rds"));
+    datr <- as.data.frame(data.table::fread(paste0("sparse/bs_pr1_", i, ".dta")));
     fit <-
       nlmixr(
         modX,
@@ -72,13 +72,18 @@ cl <- makeCluster(7, outfile="")
 registerDoParallel(cl)
 
 nlmixr <-
-  foreach(i = 1:500, .packages = c('nlmixr')) %dopar%
+  foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
   do_nlmixrODE(i, method="focei")
 
+nlmixrLL <-
+  foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
+  do_nlmixrODE(i, method="foceiLL")
+
+
 nlmixrS <-
-  foreach(i = 1:500, .packages = c('nlmixr')) %dopar%
+  foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
   do_nlmixrODE(i, method="saem")
 
 nlmixrN <-
-  foreach(i = 1:500, .packages = c('nlmixr')) %dopar%
+  foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
   do_nlmixrODE(i, method="nlme")
