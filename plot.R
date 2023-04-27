@@ -10,7 +10,7 @@ Cs <- function(...){
 expected_values <- list();
 runno <- "run"
 
-readData <- function(nlmixrVersion=c(as.character(packageVersion("nlmixr2est"))),
+readData <- function(nlmixrVersion=c("2.1.4"),
                      rxode2Version=as.character(packageVersion("rxode2")),
                      est=c("saem", "focei", "nlme"),
                      platform="unix",
@@ -91,13 +91,16 @@ library(gridExtra)
 
 xgx_theme_set()
 
-f <- function(nlmixrVersion=c("1.1.1.3"), est=c("saem", "foceiLL", "focei", "nlme"),
+f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"),
               platform="unix") {
+  
   ret <- readData(nlmixrVersion=nlmixrVersion, est=est,
                   platform=platform) %>%
     mutate(by=paste0(est, "(", ver, " ", os, ")"),
            run = factor(run)) %>%
     mutate(run2=as.numeric(run))
+
+  print(summary(ret))
 
   .lvl <- levels(ret$run)
   .brk <- seq_along(.lvl);
@@ -179,9 +182,11 @@ f <- function(nlmixrVersion=c("1.1.1.3"), est=c("saem", "foceiLL", "focei", "nlm
 
 }
 
-nlmixrVersion <- as.character(packageVersion("nlmixr2est"))
+nlmixrVersion <- "2.1.4" #as.character(packageVersion("nlmixr2est"))
 
 pdf("compare.pdf")
+
+f(nlmixrVersion, c("focei", "saem"), "unix")
 
 f(nlmixrVersion, c("solve_saem", "saem"), "unix")
 

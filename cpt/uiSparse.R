@@ -75,11 +75,6 @@ nlmixr <-
   foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
   do_nlmixrODE(i, method="focei")
 
-nlmixrLL <-
-  foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
-  do_nlmixrODE(i, method="foceiLL")
-
-
 nlmixrS <-
   foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
   do_nlmixrODE(i, method="saem")
@@ -87,3 +82,7 @@ nlmixrS <-
 nlmixrN <-
   foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
   do_nlmixrODE(i, method="nlme")
+
+nlmixrLL <-
+  foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
+  do_nlmixrODE(i, method="foceiLL")

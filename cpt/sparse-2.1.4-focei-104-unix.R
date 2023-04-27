@@ -1,0 +1,23 @@
+expected_values[[runno]] <- list(lik = c(-2775.57, 5565.14, 5594.35), param = c(1.4425, 4.2873, 
+0.045627, 0.21355), stdev_param = c(0.34057, 0.27562, 0.12697, 
+NA), sigma = structure(numeric(0), names = character(0)), parFixedDf = structure(list(
+    Parameter = c("log Cl (L/hr)", "log V (L)", "log Ka (/hr)", 
+    ""), Estimate = c(lCl = 1.4425458140014, lVc = 4.28727097624745, 
+    lKA = 0.0456273228631656, prop.err = 0.21354857214408), SE = c(lCl = 0.0366947049049879, 
+    lVc = 0.0359522635689874, lKA = 0.0814286090830259, prop.err = NA
+    ), "%RSE" = c(2.54374624007278, 0.838581553817611, 178.464577742654, 
+    NA), "Back-transformed" = c(4.2314546126386, 72.7676127384217, 
+    1.04668426296754, 0.21354857214408), "CI Lower" = c(3.93781308233329, 
+    67.8165207735039, 0.892284886194693, NA), "CI Upper" = c(4.54699290302805, 
+    78.0801698944977, 1.22780063104741, NA), "BSV(CV%)" = c(35.069186720474, 
+    28.0942501447027, 12.748203212027, NA), "Shrink(SD)%" = c(11.0337878708075, 
+    23.0752775639246, 86.7373751416306, NA)), class = "data.frame", row.names = c("lCl", 
+"lVc", "lKA", "prop.err")), omega = structure(c(0.115990127778109, 
+0, 0, 0, 0.0759685943044946, 0, 0, 0, 0.0161210237122512), dim = c(3L, 
+3L), dimnames = list(c("eta.Cl", "eta.Vc", "eta.KA"), c("eta.Cl", 
+"eta.Vc", "eta.KA"))), time = structure(list(setup = 0.002152, 
+    optimize = 3.685493, covariance = 3.685494, table = 0.0379999999999967, 
+    compress = 0.00999999999999091, other = 16.290861), class = "data.frame", row.names = "elapsed"), 
+    objDf = structure(list(OBJF = 4670.80158723087, AIC = 5565.14470204095, 
+        BIC = 5594.34660622282, "Log-likelihood" = -2775.57235102047, 
+        "Condition#(Cov)" = 6.65870982437806, "Condition#(Cor)" = 2.77174373700401), row.names = "FOCEi", class = "data.frame")) 
