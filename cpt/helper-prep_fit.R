@@ -18,18 +18,20 @@ default_control <-
 
 
 defaultControl <- function(x) {
-    if (x == "nlme") {
-        return(nlme::nlmeControl(
-                   returnObject=TRUE,
-                   msMaxIter = 100,
-                   maxIter = 100,
-                   pnlsMaxIter = 100,
-                   msVerbose = verbose_minimization))
-    } else if (x == "saem") {
-        return(saemControl())
-    } else {
-        return(foceiControl())
-    }
+  if (x == "nlme") {
+    return(nlme::nlmeControl(
+      returnObject=TRUE,
+      msMaxIter = 100,
+      maxIter = 100,
+      pnlsMaxIter = 100,
+      msVerbose = verbose_minimization))
+  } else if (x == "saem") {
+    return(saemControl())
+  } else {
+    return(foceiControl())
+  } else if (x == "nonmem") {
+    return(nonmemControl(readRounding=TRUE))
+  }
 }
 
 defaultTable <- tableControl(cwres=TRUE); ## CWRES needed for FOCEi likelihood

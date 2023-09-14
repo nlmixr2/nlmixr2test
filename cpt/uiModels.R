@@ -12,7 +12,7 @@ options(RxODE.cache.directory="~/.rxCache")
 ## Use runEst to select one estimation type ie
 ## runModel <- "U029"; "U046"
 ## runEst  <- "focei"
-library(nlmixr2)
+library(babelmixr2) # to allow nonmem/monolix comparison
 library(testthat)
 source("helper-prep_fit.R")
 one.compartment.IV.model <- function() {
@@ -700,7 +700,7 @@ if (Sys.info()["sysname"]=="Darwin") os <- "mac"
 for (opt in opts){
   for (i in seq_along(mod2$model)){
     with(mod2[i,],{
-      if ((solve & opt %in% c("nlme","saem", "focei", "foceiLL")) | !solve) {
+      if ((solve & opt %in% c("nlme","saem", "focei", "foceiLL", "nonmem743", "nonmem73")) | !solve) {
         .msg <- sprintf("%s: %s %s-compartment %s, %s%s",model,
                         opt,
                         ifelse(cmt==1,"one","two"),
@@ -729,6 +729,13 @@ for (opt in opts){
           if (opt == "foceiLL") {
             nlmixrFn <- nlmixrFn %>% model(cp ~ prop(prop.err) + dnorm())
             .opt <- "focei"
+          }
+          if (op == "nonmem743") {
+            .opt <- "nonmem"
+            options("babelmixr2.nonmem"="nmfe743-ifort")
+          } else if (op == "nonmem73") {
+            .opt <- "nonmem"
+            options("babelmixr2.nonmem"="nmfe73-ifort")
           }
           print(nlmixrFn)
           if (exists(data,env$ns)) {
