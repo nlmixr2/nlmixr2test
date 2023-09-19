@@ -16,11 +16,11 @@ readData <- function(nlmixrVersion=c("2.1.4"),
                      platform="unix",
                      runs=sort(Cs(U001,U002,U003,U004,U009,U010,U011,U012,U013,U014,
                                   U015,U020,U021,U022,U023,U024,U026,U025, U029, U030,U031,
-                                  U032,U033,U035,U034,U040,U041,U042,U046,U047,U049,U048, 
+                                  U032,U033,U035,U034,U040,U041,U042,U046,U047,U049,U048,
                                   U054,U055,U056,U060,U061,U062,U063,U068, U069,U070))) {
   .ret <- expand.grid(ver=nlmixrVersion, est=est, os=platform, run=runs, stringsAsFactors=FALSE) %>%
     mutate(src=paste0("values-", ver, "-", run,"_", est, "-", os, ".R"))
-  
+
   .ret <- lapply(seq_along(.ret$ver), function(x) {
     .c <- setNames(as.character(.ret[x, ]), names(.ret))
     .f <- file.path("cpt", .c["src"])
@@ -61,7 +61,7 @@ readData <- function(nlmixrVersion=c("2.1.4"),
       .tmp3 <- paste0("SE.", .tmp)
       .tmp <- c(.tmp, .tmp2, .tmp3)
       .covMethod <- .ret$covMethod
-      .ret <- data.frame(t(c(.ret1, .ret2, .ret3)), time=sum(.ret$time))
+      .ret <- data.frame(t(c(.ret1, .ret2, .ret3)), time=sum(.ret$time), objf=.ret$objDf[, "OBJF"])
       for(.f in .tmp){
         if (is.null(.ret[[.f]])) {
           .ret[[.f]] <- NA
@@ -69,11 +69,12 @@ readData <- function(nlmixrVersion=c("2.1.4"),
       }
       .ret <- cbind(.ret, data.frame(t(.c)))
       .ret$covMethod <-.covMethod
+
       return(.ret)
     } else {
       .out <- c("Cl", "Vc", "prop.err", "SE.Cl", "SE.Vc", "BSV.Cl", "BSV.Vc",  "VM", "KM", "Q", "Vp",
                 "KA", "BSV.VM", "BSV.KM", "BSV.Q", "BSV.Vp",  "BSV.KA", "SE.VM", "SE.KM", "SE.Q",
-                "SE.Vp", "SE.KA", "time","covMethod")
+                "SE.Vp", "SE.KA", "time","objf", "covMethod")
       .ret <- cbind(data.frame(t(setNames(rep(NA, length(.out)), .out))),
                     data.frame(t(.c)))
       return(.ret)
@@ -86,6 +87,12 @@ readData <- function(nlmixrVersion=c("2.1.4"),
   return(do.call("rbind", .ret))
 }
 
+ret <- readData(nlmixrVersion=c("2.1.4"), est=c("foceiLL", "focei"),
+                platform="unix")
+ret2 <- readData(nlmixrVersion="2.1.6", est="nonmem743", platform="unix")
+ret <- rbind(ret, ret2)
+
+
 library(ggplot2)
 library(gridExtra)
 
@@ -93,7 +100,7 @@ xgx_theme_set()
 
 f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"),
               platform="unix") {
-  
+
   ret <- readData(nlmixrVersion=nlmixrVersion, est=est,
                   platform=platform) %>%
     mutate(by=paste0(est, "(", ver, " ", os, ")"),
@@ -115,7 +122,7 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
             axis.title.x=element_blank(),
             legend.position="top") +
       labs(color="") +
-      scale_x_continuous(breaks=.brk,labels=.lvl, minor_breaks=NULL) + 
+      scale_x_continuous(breaks=.brk,labels=.lvl, minor_breaks=NULL) +
       ylab(ylab)
 
     p2 <- ggplot(ret, aes_string("run2", paste0("BSV.", var), color="by")) +
@@ -126,9 +133,9 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
             axis.title.y=element_text(face="bold", size=14),
             axis.title.x=element_blank(),
             legend.position="none") +
-      scale_x_continuous(breaks=.brk,labels=.lvl, minor_breaks=NULL) + 
+      scale_x_continuous(breaks=.brk,labels=.lvl, minor_breaks=NULL) +
       ylab(bsvLab)
-    
+
     df2 <- ret %>% mutate(SE.VM = ifelse(covMethod=="r,s", SE.VM, NA),
                           SE.KM = ifelse(covMethod=="r,s", SE.KM, NA),
                           SE.Q  = ifelse(covMethod=="r,s", SE.Q, NA),
@@ -144,7 +151,7 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
             axis.title.y=element_text(face="bold", size=14),
             axis.title.x=element_blank(),
             legend.position="none") +
-      scale_x_continuous(breaks=.brk, labels=.lvl, minor_breaks=NULL) + 
+      scale_x_continuous(breaks=.brk, labels=.lvl, minor_breaks=NULL) +
       ylab(paste0("SE log ", ylab, " (r,s)"))
 
     p3 <- ggplot(df2, aes_string("run2", paste0("SE.", var), color="by", group="by")) +
@@ -154,7 +161,7 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
             axis.title.y=element_text(face="bold", size=14),
             axis.title.x=element_blank(),
             legend.position="none") +
-      scale_x_continuous(breaks=.brk, labels=.lvl, minor_breaks=NULL) + 
+      scale_x_continuous(breaks=.brk, labels=.lvl, minor_breaks=NULL) +
       ylab(paste0("SE log ", ylab))
 
     grid.arrange(p1, p2, ncol=1)
@@ -176,7 +183,7 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
           axis.title.x=element_blank(),
           legend.position="top") +
     labs(color="") +
-    scale_x_continuous(breaks=.brk,labels=.lvl, minor_breaks=NULL) + 
+    scale_x_continuous(breaks=.brk,labels=.lvl, minor_breaks=NULL) +
     ylab("Time") + xgxr::xgx_scale_y_log10()
   plot(p1)
 
