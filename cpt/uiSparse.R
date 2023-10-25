@@ -75,6 +75,26 @@ nlmixr <-
   foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
   do_nlmixrODE(i, method="focei")
 
+file <- list.files(pattern="sparse.*focei")
+
+.f <- vector("list", length(file))
+
+for (f in file) {
+  runno <- "run"
+  expected_values <- list()
+  source(f)
+  .r <- rownames(expected_values$run$parFixedDf)
+  .v <- setNames(expected_values$run$parFixedDf$`Back-transformed`, .r)
+  .s <- setNames(expected_values$run$parFixedDf$SE, paste0("SE.", .r, ""))
+  .b <- setNames(expected_values$run$parFixedDf$`BSV(CV%)`, paste0("BSV.", .r, ""))
+  .d <- as.data.frame(t(c(.v, .s, .b)))
+  .d$f <- f
+  .d$n <- as.numeric(sub("sparse.*focei-([0-9]+).*", "\\1", f))
+  .f[[.d$n]] <- .d
+}
+
+f <- do.call("rbind", .f)
+
 nlmixrS <-
   foreach(i = 1:500, .packages = c('nlmixr2')) %dopar%
   do_nlmixrODE(i, method="saem")
