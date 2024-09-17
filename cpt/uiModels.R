@@ -234,7 +234,7 @@ one.compartment.oral.model2.solve <- function() {
     Vc <- exp(lVc + eta.Vc)
     KA <- exp(lKA + eta.KA)
     # And is assumed to follow proportional error estimated by prop.err
-    cp <- linCmt() 
+    cp <- linCmt()
     cp ~ prop(prop.err)
   })
 }
@@ -686,7 +686,7 @@ if (exists("runModel", globalenv())) {
 }
 
 ## opts <- c("focei", "saem", "nlme", "fo", "foi", "foce")
-opts <- c("foceiLL", "focei", "nlme", "saem")
+opts <- c("foceiLL", "focei", "foce", "nlme", "saem")
 if (exists("runEst", globalenv())) {
   opts <- runEst
 }
@@ -730,10 +730,10 @@ for (opt in opts){
             nlmixrFn <- nlmixrFn %>% model(cp ~ prop(prop.err) + dnorm())
             .opt <- "focei"
           }
-          if (op == "nonmem743") {
+          if (opt == "nonmem743"){
             .opt <- "nonmem"
             options("babelmixr2.nonmem"="nmfe743-ifort")
-          } else if (op == "nonmem73") {
+          } else if (opt == "nonmem73") {
             .opt <- "nonmem"
             options("babelmixr2.nonmem"="nmfe73-ifort")
           }
@@ -782,4 +782,3 @@ for (opt in opts){
 }
 
 ## U014
-

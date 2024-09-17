@@ -189,7 +189,7 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
 
 }
 
-nlmixrVersion <- "2.1.4" #as.character(packageVersion("nlmixr2est"))
+nlmixrVersion <-  as.character(packageVersion("nlmixr2est"))
 
 pdf("compare.pdf")
 

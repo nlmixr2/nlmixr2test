@@ -27,10 +27,12 @@ defaultControl <- function(x) {
       msVerbose = verbose_minimization))
   } else if (x == "saem") {
     return(saemControl())
-  } else {
-    return(foceiControl())
   } else if (x == "nonmem") {
     return(nonmemControl(readRounding=TRUE))
+  } else if (x == "monolix") {
+    return(monolixControl())
+  } else {
+    return(foceiControl())
   }
 }
 
