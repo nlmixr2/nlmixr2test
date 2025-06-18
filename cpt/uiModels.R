@@ -1,4 +1,8 @@
 options(RxODE.cache.directory="~/.rxCache")
+## runModel <- 'U001_solve'; runEst <- 'saem'; source('uiModels.R')
+## runModel <- "U001"; runEst <- "saem"; source("uiModels.R")
+## runModel <- "U001_solve"; source("uiModels.R")
+## runModel <- "U001"; runEst <- "focei_solve"; source("uiModels.R")
 ## runModel <- "U003"; runEst <- "focei"; source("uiModels.R")
 ## runModel <- "U014"; runEst <- "focei"; source("uiModels.R")
 ## runModel <- "U025"; runEst <- "focei"; source("uiModels.R")
@@ -498,8 +502,6 @@ two.compartment.oral.model <- function() {
     cp ~ prop(prop.err)
   })
 }
-
-
 
 two.compartment.oral.model.solve <- function() {
   ini({ # Where initial conditions/variables are specified

@@ -1,6 +1,7 @@
 library(nlmixr2)
 library(dplyr)
 library(xgxr)
+library(nonmem2rx)
 
 ## Function converting arguments to characters
 Cs <- function(...){
@@ -10,7 +11,162 @@ Cs <- function(...){
 expected_values <- list();
 runno <- "run"
 
-readData <- function(nlmixrVersion=c("2.1.4"),
+.val <- lapply(list.files("nonmem/solved", pattern="\\.lst$"),
+       function(l) {
+         .nminfo <- nminfo(paste0("nonmem/solved/", l))
+         if (l %in% c("runN001.lst", "runN002.lst", "runN004.lst",
+                      "runN012.lst", "runN013.lst",
+                      "runN015.lst")) {
+           data.frame(
+             Cl = exp(.nminfo$theta["theta1"]),
+             Vc = exp(.nminfo$theta["theta2"]),
+             prop.err = .nminfo$theta["theta3"],
+             SE.Cl = sqrt(.nminfo$cov["theta1", "theta1"]),
+             SE.Vc = sqrt(.nminfo$cov["theta2", "theta2"]),
+             BSV.Cl = sqrt(exp(.nminfo$omega["eta1", "eta1"])-1)*100,
+             BSV.Vc = sqrt(exp(.nminfo$omega["eta2", "eta2"])-1)*100,
+             time= NA, # different systems
+             objf = .nminfo$objf,
+             VM = NA,
+             KM = NA,
+             Q = NA,
+             Vp = NA,
+             KA = NA,
+             BSV.VM = NA,
+             BSV.KM = NA,
+             BSV.Q = NA,
+             BSV.Vp = NA,
+             BSV.KA = NA,
+             SE.VM = NA,
+             SE.KM = NA,
+             SE.Q = NA,
+             SE.Vp = NA,
+             SE.KA = NA,
+             ver= .nminfo$nonmem,
+             est="solve_nonmem_focei",
+             src=l,
+             os=NA,
+             covMethod="r,s",
+             run=sub("[.]lst", "", sub("runN", "U", l))
+           )
+         } else if (l %in% c("runN023.lst",
+                             "runN024.lst",
+                             "runN026.lst")) {
+           data.frame(
+             Cl = exp(.nminfo$theta["theta1"]),
+             Vc = exp(.nminfo$theta["theta2"]),
+             prop.err = .nminfo$theta["theta4"],
+             SE.Cl = sqrt(.nminfo$cov["theta1", "theta1"]),
+             SE.Vc = sqrt(.nminfo$cov["theta2", "theta2"]),
+             BSV.Cl = sqrt(exp(.nminfo$omega["eta1", "eta1"])-1)*100,
+             BSV.Vc = sqrt(exp(.nminfo$omega["eta2", "eta2"])-1)*100,
+             time= NA, # different systems
+             objf = .nminfo$objf,
+             VM = NA,
+             KM = NA,
+             Q = NA,
+             Vp = NA,
+             KA = exp(.nminfo$theta["theta3"]),
+             BSV.VM = NA,
+             BSV.KM = NA,
+             BSV.Q = NA,
+             BSV.Vp = NA,
+             BSV.KA = sqrt(exp(.nminfo$omega["eta3", "eta3"])-1)*100,
+             SE.VM = NA,
+             SE.KM = NA,
+             SE.Q = NA,
+             SE.Vp = NA,
+             SE.KA = sqrt(.nminfo$cov["theta3", "theta3"]),
+             ver= .nminfo$nonmem,
+             est="solve_nonmem_focei",
+             src=l,
+             os=NA,
+             covMethod="r,s",
+             run=sub("[.]lst", "", sub("runN", "U", l))
+           )
+         } else if (l %in% c("runN032.lst",
+                             "runN033.lst",
+                             "runN035.lst",
+                             "runN046.lst",
+                             "runN047.lst",
+                             "runN049.lst")) {
+           data.frame(
+             Cl = exp(.nminfo$theta["theta1"]),
+             Vc = exp(.nminfo$theta["theta2"]),
+             prop.err = .nminfo$theta["theta5"],
+             SE.Cl = sqrt(.nminfo$cov["theta1", "theta1"]),
+             SE.Vc = sqrt(.nminfo$cov["theta2", "theta2"]),
+             BSV.Cl = sqrt(exp(.nminfo$omega["eta1", "eta1"])-1)*100,
+             BSV.Vc = sqrt(exp(.nminfo$omega["eta2", "eta2"])-1)*100,
+             time= NA, # different systems
+             objf = .nminfo$objf,
+             VM = NA,
+             KM = NA,
+             Q = exp(.nminfo$theta["theta3"]),
+             Vp = exp(.nminfo$theta["theta4"]),
+             KA = NA,
+             BSV.VM = NA,
+             BSV.KM = NA,
+             BSV.Q = sqrt(exp(.nminfo$omega["eta3", "eta3"])-1)*100,
+             BSV.Vp = sqrt(exp(.nminfo$omega["eta4", "eta4"])-1)*100,
+             BSV.KA = NA,
+             SE.VM = NA,
+             SE.KM = NA,
+             SE.Q = sqrt(.nminfo$cov["theta3", "theta3"]),
+             SE.Vp = sqrt(.nminfo$cov["theta4", "theta4"]),
+             SE.KA = NA,
+             ver= .nminfo$nonmem,
+             est="solve_nonmem_focei",
+             src=l,
+             os=NA,
+             covMethod="r,s",
+             run=sub("[.]lst", "", sub("runN", "U", l))
+             )
+         } else if (l %in% c("runN060.lst",
+                             "runN061.lst",
+                             "runN063.lst")) {
+           data.frame(
+             Cl = exp(.nminfo$theta["theta1"]),
+             Vc = exp(.nminfo$theta["theta2"]),
+             prop.err = .nminfo$theta["theta6"],
+             SE.Cl = sqrt(.nminfo$cov["theta1", "theta1"]),
+             SE.Vc = sqrt(.nminfo$cov["theta2", "theta2"]),
+             BSV.Cl = sqrt(exp(.nminfo$omega["eta1", "eta1"])-1)*100,
+             BSV.Vc = sqrt(exp(.nminfo$omega["eta2", "eta2"])-1)*100,
+             time= NA, # different systems
+             objf = .nminfo$objf,
+             VM = NA,
+             KM = NA,
+             Q = exp(.nminfo$theta["theta3"]),
+             Vp = exp(.nminfo$theta["theta4"]),
+             KA = exp(.nminfo$theta["theta5"]),
+             BSV.VM = NA,
+             BSV.KM = NA,
+             BSV.Q = sqrt(exp(.nminfo$omega["eta3", "eta3"])-1)*100,
+             BSV.Vp = sqrt(exp(.nminfo$omega["eta4", "eta4"])-1)*100,
+             BSV.KA = sqrt(exp(.nminfo$omega["eta5", "eta5"])-1)*100,
+             SE.VM = NA,
+             SE.KM = NA,
+             SE.Q = sqrt(.nminfo$cov["theta3", "theta3"]),
+             SE.Vp = sqrt(.nminfo$cov["theta4", "theta4"]),
+             SE.KA = sqrt(.nminfo$cov["theta5", "theta5"]),
+             ver= .nminfo$nonmem,
+             est="solve_nonmem_focei",
+             src=l,
+             os=NA,
+             covMethod="r,s",
+             run=sub("[.]lst", "", sub("runN", "U", l))
+           )
+         } else {
+           .nminfo
+         }
+       })
+
+solved.nonmem.focei <- do.call("rbind", .val)
+rownames(solved.nonmem.focei) <- NULL
+
+
+readData <- function(nlmixrVersion=c("4.0.0"),
                      rxode2Version=as.character(packageVersion("rxode2")),
                      est=c("saem", "focei", "nlme"),
                      platform="unix",
@@ -87,10 +243,11 @@ readData <- function(nlmixrVersion=c("2.1.4"),
   return(do.call("rbind", .ret))
 }
 
-ret <- readData(nlmixrVersion=c("2.1.4"), est=c("foceiLL", "focei"),
+ret <- readData(nlmixrVersion=c("4.0.0"), est=c("saem", "focei"),
                 platform="unix")
-ret2 <- readData(nlmixrVersion="2.1.6", est="nonmem743", platform="unix")
-ret <- rbind(ret, ret2)
+
+## ret2 <- readData(nlmixrVersion="4.0.0", est="nonmem743", platform="unix")
+## ret <- rbind(ret, ret2)
 
 
 library(ggplot2)
@@ -193,16 +350,16 @@ nlmixrVersion <-  as.character(packageVersion("nlmixr2est"))
 
 pdf("compare.pdf")
 
-f(nlmixrVersion, c("focei", "saem"), "unix")
+try(f(nlmixrVersion, c("solve_focei", "focei"), "unix"))
 
-f(nlmixrVersion, c("solve_saem", "saem"), "unix")
+try(f(nlmixrVersion, c("focei", "saem"), "unix"))
 
-f(nlmixrVersion, c("solve_focei", "focei"), "unix")
+try(f(nlmixrVersion, c("solve_saem", "saem"), "unix"))
 
-f(nlmixrVersion, c("solve_nlme", "nlme"), "unix")
+try(f(nlmixrVersion, c("solve_nlme", "nlme"), "unix"))
 
-f(nlmixrVersion, c("foceiLL", "focei"), "unix")
+try(f(nlmixrVersion, c("foceiLL", "focei"), "unix"))
 
-f(nlmixrVersion, c("saem", "focei"), "unix")
+try(f(nlmixrVersion, c("saem", "focei"), "unix"))
 
 dev.off()
