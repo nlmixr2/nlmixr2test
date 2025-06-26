@@ -167,6 +167,73 @@ rownames(solved.nonmem.focei) <- NULL
 solved.nonmem.focei$os <- "unix"
 
 
+getSolved <- function(type="ad") {
+  ad <- lapply(list.files(pattern=type, "solved"),
+               function(f) {
+                 expected_values <- list()
+                 source(file.path("solved", f), local=TRUE)
+                 .ret <- expected_values[["run"]]
+                 .ret1 <- setNames(.ret$parFixedDf$`Back-transformed`,
+                                   sapply(rownames(.ret$parFixedDf),
+                                          function(x) {
+                                            if (x == "prop.err") {
+                                              x
+                                            } else {
+                                              substr(x, 2, nchar(x))
+                                            }
+                                          }))
+                 .ret2 <- setNames(.ret$parFixedDf$`SE`,
+                                   sapply(rownames(.ret$parFixedDf),
+                                          function(x) {
+                                            if (x == "prop.err") {
+                                              x
+                                            } else {
+                                              paste0("SE.", substr(x, 2, nchar(x)))
+                                            }
+                                          }))
+                 .ret3 <- setNames(.ret$parFixedDf$`BSV(CV%)`,
+                                   sapply(rownames(.ret$parFixedDf),
+                                          function(x) {
+                                            if (x == "prop.err") {
+                                              x
+                                            } else {
+                                              paste0("BSV.", substr(x, 2, nchar(x)))
+                                            }
+                                          }))
+                 .ret2 <- .ret2[names(.ret2) != "prop.err"]
+                 .ret3 <- .ret3[names(.ret3) != "prop.err"]
+                 .tmp <- c("VM", "KM", "Q", "Vp", "KA", "Cl")
+                 .tmp2 <- paste0("BSV.", .tmp)
+                 .tmp3 <- paste0("SE.", .tmp)
+                 .tmp <- c(.tmp, .tmp2, .tmp3)
+                 .covMethod <- .ret$covMethod
+                 .ret <- data.frame(t(c(.ret1, .ret2, .ret3)), time=sum(.ret$time), objf=.ret$objDf[, "OBJF"])
+                 for(.f in .tmp){
+                   if (is.null(.ret[[.f]])) {
+                     .ret[[.f]] <- NA
+                   }
+                 }
+                 ## .ret <- cbind(.ret, data.frame(t(.c)))
+                 .ret$covMethod <-.covMethod
+                 .ret$run <- sub(".*(U[0-9]+)_.*", "\\1", f)
+                 return(.ret)
+               })
+
+  ad <- do.call("rbind", ad)
+
+  ad <- ad %>%
+    mutate(ver="4.0.0",
+           est=type,
+           src=".",
+           "os"="unix")
+  ad
+}
+
+
+solved.nonmem.focei <- rbind(solved.nonmem.focei,
+                             getSolved("ad"),
+                             getSolved("f3"))
+
 readData <- function(nlmixrVersion=c("4.0.0"),
                      rxode2Version=as.character(packageVersion("rxode2")),
                      est=c("saem", "focei", "nlme"),
