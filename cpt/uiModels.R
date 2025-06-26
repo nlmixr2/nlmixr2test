@@ -2,7 +2,6 @@ options(RxODE.cache.directory="~/.rxCache")
 ## runModel <- 'U001_solve'; runEst <- 'saem'; source('uiModels.R')
 ## runModel <- "U001"; runEst <- "saem"; source("uiModels.R")
 ## runModel <- "U001_solve"; source("uiModels.R")
-## runModel <- "U001"; runEst <- "focei_solve"; source("uiModels.R")
 ## runModel <- "U003"; runEst <- "focei"; source("uiModels.R")
 ## runModel <- "U014"; runEst <- "focei"; source("uiModels.R")
 ## runModel <- "U025"; runEst <- "focei"; source("uiModels.R")
@@ -16,6 +15,7 @@ options(RxODE.cache.directory="~/.rxCache")
 ## Use runEst to select one estimation type ie
 ## runModel <- "U029"; "U046"
 ## runEst  <- "focei"
+library(nlmixr2)
 library(babelmixr2) # to allow nonmem/monolix comparison
 library(testthat)
 source("helper-prep_fit.R")
