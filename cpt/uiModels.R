@@ -687,8 +687,8 @@ if (exists("runModel", globalenv())) {
   mod2 <- mod2 %>% filter(model==runModel)
 }
 
-## opts <- c("focei", "saem", "nlme", "fo", "foi", "foce")
-opts <- c("foceiLL", "focei", "foce", "nlme", "saem")
+opts <- c("focei", "saem", "nlme", "fo", "foi", "foce", "foceiLL")
+## opts <- c("foceiLL", "focei", "foce", "nlme", "saem")
 if (exists("runEst", globalenv())) {
   opts <- runEst
 }

@@ -32,6 +32,20 @@ defaultControl <- function(x) {
   } else if (x == "monolix") {
     return(monolixControl())
   } else {
+    if (exists("linCmtScale", globalenv())) {
+      .scale <- get("linCmtScale", globalenv())
+      .sensType <- get("linCmtSensType", globalenv())
+      .hcmt <- get("linCmtHcmt", globalenv())
+      .hmeanI <- get("linCmtHmeanI", globalenv())
+      .hmeanO <- get("linCmtHmeanO", globalenv())
+      .forwardMax <- get("linCmtForwardMax", globalenv())
+      return(foceiControl(rxControl=rxControl(linCmtScale=.scale,
+                                              linCmtSensType=.sensType,
+                                              linCmtHcmt=.hcmt,
+                                              linCmtHmeanI=.hmeanI,
+                                              linCmtHmeanO=.hmeanO,
+                                              linCmtForwardMax=.forwardMax)))
+    }
     return(foceiControl())
   }
 }

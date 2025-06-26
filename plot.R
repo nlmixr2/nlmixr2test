@@ -43,7 +43,7 @@ runno <- "run"
              SE.Vp = NA,
              SE.KA = NA,
              ver= .nminfo$nonmem,
-             est="solve_nonmem_focei",
+             est="solve_focei_nm",
              src=l,
              os=NA,
              covMethod="r,s",
@@ -78,7 +78,7 @@ runno <- "run"
              SE.Vp = NA,
              SE.KA = sqrt(.nminfo$cov["theta3", "theta3"]),
              ver= .nminfo$nonmem,
-             est="solve_nonmem_focei",
+             est="solve_focei_nm",
              src=l,
              os=NA,
              covMethod="r,s",
@@ -116,7 +116,7 @@ runno <- "run"
              SE.Vp = sqrt(.nminfo$cov["theta4", "theta4"]),
              SE.KA = NA,
              ver= .nminfo$nonmem,
-             est="solve_nonmem_focei",
+             est="solve_focei_nm",
              src=l,
              os=NA,
              covMethod="r,s",
@@ -151,7 +151,7 @@ runno <- "run"
              SE.Vp = sqrt(.nminfo$cov["theta4", "theta4"]),
              SE.KA = sqrt(.nminfo$cov["theta5", "theta5"]),
              ver= .nminfo$nonmem,
-             est="solve_nonmem_focei",
+             est="solve_focei_nm",
              src=l,
              os=NA,
              covMethod="r,s",
@@ -164,6 +164,7 @@ runno <- "run"
 
 solved.nonmem.focei <- do.call("rbind", .val)
 rownames(solved.nonmem.focei) <- NULL
+solved.nonmem.focei$os <- "unix"
 
 
 readData <- function(nlmixrVersion=c("4.0.0"),
@@ -259,7 +260,16 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
               platform="unix") {
 
   ret <- readData(nlmixrVersion=nlmixrVersion, est=est,
-                  platform=platform) %>%
+                  platform=platform)
+  linCmt <- FALSE
+  if (any(ret$est == "solve_focei")) {
+    ret <-  ret %>%
+      dplyr::filter(est != "solve_focei_nm") %>%
+      rbind(solved.nonmem.focei) %>%
+      dplyr::filter(run %in% solved.nonmem.focei$run)
+    linCmt <- TRUE
+  }
+  ret <- ret %>%
     mutate(by=paste0(est, "(", ver, " ", os, ")"),
            run = factor(run)) %>%
     mutate(run2=as.numeric(run))
@@ -322,15 +332,20 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
       ylab(paste0("SE log ", ylab))
 
     grid.arrange(p1, p2, ncol=1)
-    grid.arrange(p3a, p3, ncol=1)
+    if (!linCmt) {
+      grid.arrange(p3a, p3, ncol=1)
+    }
   }
   suppressWarnings(.f())
   suppressWarnings(.f(var="Cl", tval=4, ylab="Cl (L/hr)", bsvLab="BSV Cl(%)"))
   suppressWarnings(.f(var="KA", tval=1, ylab="Ka (1/hr)", bsvLab="BSV Ka(%)"))
   suppressWarnings(.f(var="Vp", tval=40, ylab="Vp (L)", bsvLab="BSV Vp(%)"))
   suppressWarnings(.f(var="Q", tval=4.0, ylab="Vp (L/hr)", bsvLab="BSV Vp(%)"))
-  suppressWarnings(.f(var="KM", tval=250, ylab="Km (mg/L)", bsvLab="BSV Km(%)"))
-  suppressWarnings(.f(var="VM", tval=1000, ylab="Vmax (mg/hr)", bsvLab="BSV Vmax(%)"))
+  if (!linCmt) {
+    suppressWarnings(.f(var="KM", tval=250, ylab="Km (mg/L)", bsvLab="BSV Km(%)"))
+    suppressWarnings(.f(var="VM", tval=1000, ylab="Vmax (mg/hr)", bsvLab="BSV Vmax(%)"))
+  }
+
 
   p1 <- ggplot(ret, aes_string("run2", "time", color="by")) +
     geom_point(size=3, alpha=0.5) +
@@ -346,9 +361,12 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
 
 }
 
+
 nlmixrVersion <-  as.character(packageVersion("nlmixr2est"))
 
 pdf("compare.pdf")
+
+try(f(nlmixrVersion, c("solve_focei", "solve_focei_nm", "focei"), "unix"))
 
 try(f(nlmixrVersion, c("solve_focei", "focei"), "unix"))
 
