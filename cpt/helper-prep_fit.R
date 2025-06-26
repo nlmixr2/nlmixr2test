@@ -45,6 +45,9 @@ defaultControl <- function(x) {
                                               linCmtHmeanI=.hmeanI,
                                               linCmtHmeanO=.hmeanO,
                                               linCmtForwardMax=.forwardMax)))
+    } else if (exists("linCmtSensType",envir=globalenv())) {
+      .sens <- get("linCmtSensType", envir=globalenv())
+      return(foceiControl(rxControl=rxControl(linCmtSensType=.sens)))
     }
     return(foceiControl())
   }
@@ -68,8 +71,15 @@ generate_expected_values <- function(x=FALSE) {
       objDf=fit[[runno]]$objDf,
       covMethod=fit[[runno]]$covMethod)
   if (x) {
-    sink(paste0("values-", .nlmixr, "-", runno, "-", .os, ".R"))
+    if (grepl("solve", runno) &&
+          exists("linCmtSensType",envir=globalenv())) {
+      sink(paste0("values-", .nlmixr, "-", runno, "-", .os, "-",
+                  get("linCmtSensType",envir=globalenv()), ".R"))
       on.exit(sink())
+    } else {
+      sink(paste0("values-", .nlmixr, "-", runno, "-", .os, ".R"))
+      on.exit(sink())
+    }
   }
   cat("expected_values[[runno]] <- ")
   cat(paste(deparse(ret), collapse="\n"), "\n");
@@ -81,7 +91,13 @@ genIfNeeded <- function(gen=TRUE) {
   .os <- .Platform$OS.type
   .nlmixr <- packageVersion("nlmixr2est")
   if (Sys.info()["sysname"]=="Darwin") .os <- "mac"
-  .ret <- paste0("values-", .nlmixr, "-", runno, "-", .os, ".R")
+  if (grepl("solve", runno) &&
+        exists("linCmtSensType",envir=globalenv())) {
+    .ret <- paste0("values-", .nlmixr, "-", runno, "-", .os, "-",
+                   get("linCmtSensType",envir=globalenv()), ".R")
+  } else {
+    .ret <- paste0("values-", .nlmixr, "-", runno, "-", .os, ".R")
+  }
   if (gen && !file.exists(.ret)) {
     generate_expected_values(TRUE)
   }

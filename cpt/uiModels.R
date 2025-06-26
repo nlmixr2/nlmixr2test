@@ -716,7 +716,12 @@ for (opt in opts){
         context(.msg)
         runno <- paste0(model,"_",opt)
         assign("runno",runno,globalenv())
-        rds <- paste0(runno,"-", os, ".rds")
+        if (solve && exists("linCmtSensType",envir=globalenv())) {
+          rds <- paste0(runno,"-", os, "-",  get("linCmtSensType",envir=globalenv()),
+                        ".rds")
+        } else {
+          rds <- paste0(runno,"-", os, ".rds")
+        }
         .rfile <- genIfNeeded(FALSE)
         .success <- TRUE
         if (file.exists(rds)) {

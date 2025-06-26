@@ -166,6 +166,8 @@ solved.nonmem.focei <- do.call("rbind", .val)
 rownames(solved.nonmem.focei) <- NULL
 solved.nonmem.focei$os <- "unix"
 
+nmSolve <- unique(solved.nonmem.focei$run)
+
 
 getSolved <- function(type="ad") {
   ad <- lapply(list.files(pattern=type, "solved"),
@@ -333,18 +335,28 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
     ret <-  ret %>%
       dplyr::filter(est != "solve_focei_nm") %>%
       rbind(solved.nonmem.focei) %>%
-      dplyr::filter(run %in% solved.nonmem.focei$run)
+      dplyr::filter(run %in% nmSolve) %>%
+      dplyr::mutate(est = case_when(est == "solve_focei_nm" ~ "nm",
+                                    est == "solve_focei" ~ "cur",
+                                    est == "focei" ~ "curOde",
+                                    TRUE ~ est))
+
+    ret <- ret %>% dplyr::filter(est %in% c("curOde", "cur", "f3"))
+
+
     linCmt <- TRUE
   }
   ret <- ret %>%
     mutate(by=paste0(est, "(", ver, " ", os, ")"),
            run = factor(run)) %>%
-    mutate(run2=as.numeric(run))
+    mutate(run2=as.numeric(run)) %>%
+    dplyr::arrange(run2, by)
 
   print(summary(ret))
 
   .lvl <- levels(ret$run)
   .brk <- seq_along(.lvl);
+
 
   .f <- function(var="Vc", tval=70, ylab="Vc (L)", bsvLab="BSV Vc(%)", bsvVal=30) {
     p1 <- ggplot(ret, aes_string("run2", var, color="by")) +
