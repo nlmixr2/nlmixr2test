@@ -726,6 +726,7 @@ for (opt in opts){
         .success <- TRUE
         if (file.exists(rds)) {
           fit <- get("fit",envir=env)
+          fit <- list()
           fit[[runno]] <- readRDS(rds)
           assign("fit",fit, envir=env)
         } else if (file.exists(.rfile)) {
@@ -770,6 +771,7 @@ for (opt in opts){
             .fit <- try({stop("dumb")},silent=TRUE)
           }
           if (!inherits(.fit, "try-error")) {
+            fit <- list()
             fit[[runno]] <- .fit
             saveRDS(fit[[runno]],rds)
             assign("fit",fit, envir=env)
