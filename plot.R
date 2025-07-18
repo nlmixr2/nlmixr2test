@@ -162,14 +162,14 @@ runno <- "run"
          }
        })
 
-solved.nonmem.focei <- do.call("rbind", .val)
-rownames(solved.nonmem.focei) <- NULL
-solved.nonmem.focei$os <- "unix"
+solved.nonmem.focei0 <- do.call("rbind", .val)
+rownames(solved.nonmem.focei0) <- NULL
+solved.nonmem.focei0$os <- "unix"
 
-nmSolve <- unique(solved.nonmem.focei$run)
+nmSolve <- unique(solved.nonmem.focei0$run)
 
 
-getSolved <- function(type="ad") {
+getSolved <- function(type="AD") {
   ad <- lapply(list.files(pattern=type, "solved"),
                function(f) {
                  expected_values <- list()
@@ -232,9 +232,12 @@ getSolved <- function(type="ad") {
 }
 
 
-solved.nonmem.focei <- rbind(solved.nonmem.focei,
-                             getSolved("ad"),
-                             getSolved("f3"))
+solved.nonmem.focei <- rbind(solved.nonmem.focei0,
+                             getSolved("AD"),
+                             getSolved("forward"),
+                             getSolved("forwardG"),
+                             getSolved("central"),
+                             getSolved("forward3"))
 
 readData <- function(nlmixrVersion=c("4.0.0"),
                      rxode2Version=as.character(packageVersion("rxode2")),
@@ -331,18 +334,32 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
   ret <- readData(nlmixrVersion=nlmixrVersion, est=est,
                   platform=platform)
   linCmt <- FALSE
-  if (any(ret$est == "solve_focei")) {
+  if (any(est == "solve_focei")) {
     ret <-  ret %>%
-      dplyr::filter(est != "solve_focei_nm") %>%
       rbind(solved.nonmem.focei) %>%
       dplyr::filter(run %in% nmSolve) %>%
       dplyr::mutate(est = case_when(est == "solve_focei_nm" ~ "nm",
                                     est == "solve_focei" ~ "cur",
+                                    est == "AD" ~ "AD",
+                                    est == "forward" ~ "f",
+                                    est == "forwardG" ~ "fg",
+                                    est == "forward3" ~ "f3",
+                                    est == "forward3G" ~ "f3g",
+                                    est == "central" ~ "c",
                                     est == "focei" ~ "curOde",
                                     TRUE ~ est))
+    #Central doesn't really work
+    #ret <- ret %>% dplyr::filter(est != "c")
+    ret <- ret %>% dplyr::filter(est %in% c("AD", "nm", "curOde"))
 
-    ret <- ret %>% dplyr::filter(est %in% c("curOde", "cur", "f3"))
 
+    linCmt <- TRUE
+  }
+  if (any(est == "solve_saem")) {
+    ret <- ret %>%
+      dplyr::filter(run %in% nmSolve)
+    #Central doesn't really work
+    #ret <- ret %>% dplyr::filter(est != "c")
 
     linCmt <- TRUE
   }
@@ -445,9 +462,10 @@ nlmixrVersion <-  as.character(packageVersion("nlmixr2est"))
 
 pdf("compare.pdf")
 
-try(f(nlmixrVersion, c("solve_focei", "solve_focei_nm", "focei"), "unix"))
+try(f(nlmixrVersion, c("solve_saem", "saem"), "unix"))
 
 try(f(nlmixrVersion, c("solve_focei", "focei"), "unix"))
+
 
 try(f(nlmixrVersion, c("focei", "saem"), "unix"))
 
