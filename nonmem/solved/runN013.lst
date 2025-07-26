@@ -1,4 +1,4 @@
-Thu Jun 19 00:50:47 CEST 2025
+Sat Jul 19 15:23:20 CEST 2025
 $PROB    INFUSION_1CPT_VCL MULTIPLE DOSE FOCE INTER (120 Ind/4677 Obs) runN013
 $INPUT   ID TIME DV LNDV MDV AMT RATE EVID DOSE VI CLI SSX IIX SD CMT
 $DATA    INFUSION_1CPT.csv IGNORE=@ IGNORE (SD.EQ.1)
@@ -32,8 +32,8 @@ NM-TRAN MESSAGES
 
 License Registered to: Novartis AG
 Expiration Date:    14 JAN 2026
-Current Date:       19 JUN 2025
-Days until program expires : 210
+Current Date:       19 JUL 2025
+Days until program expires : 180
 1NONLINEAR MIXED EFFECTS MODEL PROGRAM (NONMEM) VERSION 7.4.3
  ORIGINALLY DEVELOPED BY STUART BEAL, LEWIS SHEINER, AND ALISON BOECKMANN
  CURRENT DEVELOPERS ARE ROBERT BAUER, ICON DEVELOPMENT SOLUTIONS,
@@ -272,9 +272,9 @@ Days until program expires : 210
  TOTAL EFFECTIVE ETAS (NIND*NETA):                           240
   
  #TERE:
- Elapsed estimation  time in seconds:     7.32
- Elapsed covariance  time in seconds:     2.21
- Elapsed postprocess time in seconds:     0.12
+ Elapsed estimation  time in seconds:    11.03
+ Elapsed covariance  time in seconds:     3.29
+ Elapsed postprocess time in seconds:     0.17
 1
  
  
@@ -533,7 +533,7 @@ Days until program expires : 210
  SG11
 +       ......... ......... ......... ......... ......... ......... .........
  
- Elapsed finaloutput time in seconds:     0.28
- #CPUT: Total CPU Time in Seconds,        9.946
+ Elapsed finaloutput time in seconds:     0.41
+ #CPUT: Total CPU Time in Seconds,       14.923
 Stop Time:
-Thu Jun 19 00:51:07 CEST 2025
+Sat Jul 19 15:23:51 CEST 2025
