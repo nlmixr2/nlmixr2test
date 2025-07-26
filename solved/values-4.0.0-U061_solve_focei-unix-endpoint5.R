@@ -1,0 +1,28 @@
+expected_values[[runno]] <- list(lik = c(-16300.63, 32623.26, 32694.23), param = c(1.7951, 
+5.1172, 1.5127, 4.4199, 0.13744, 0.24943), stdev_param = c(0.3873, 
+0.3873, 0.3873, 0.3873, 0.3873, NA), parFixedDf = structure(list(
+    Parameter = c("log Cl (L/hr)", "log Vc (L)", "log Q (L/hr)", 
+    "log Vp (L)", "log V (L)", ""), Estimate = c(lCl = 1.79513799205422, 
+    lVc = 5.11724921385758, lQ = 1.5126818741858, lVp = 4.41987344361842, 
+    lKA = 0.137436127085239, prop.err = 0.249426612118259), SE = c(lCl = 94906265.6242516, 
+    lVc = 94906265.6242516, lQ = 94906265.6242516, lVp = 94906265.6242516, 
+    lKA = 94906265.6242516, prop.err = NA), "%RSE" = c(5286850706.98369, 
+    1854634426.77844, 6274039984.47028, 2147262061.57058, 69054816689.785, 
+    NA), "Back-transformed" = c(6.02030541880294, 166.875698323785, 
+    4.53888721048075, 83.0857696585744, 1.14732842042122, 0.249426612118259
+    ), "CI Lower" = c(0, 0, 0, 0, 0, NA), "CI Upper" = c(Inf, 
+    Inf, Inf, Inf, Inf, NA), "BSV(CV%)" = c(40.228626962444, 
+    40.228626962444, 40.228626962444, 40.228626962444, 40.228626962444, 
+    NA), "Shrink(SD)%" = c(100, 100, 100, 100, 100, NA)), class = "data.frame", row.names = c("lCl", 
+"lVc", "lQ", "lVp", "lKA", "prop.err")), omega = structure(c(0.150000000000056, 
+0, 0, 0, 0, 0, 0.150000000000056, 0, 0, 0, 0, 0, 0.150000000000056, 
+0, 0, 0, 0, 0, 0.150000000000056, 0, 0, 0, 0, 0, 0.150000000000056
+), dim = c(5L, 5L), dimnames = list(c("eta.Vc", "eta.Cl", "eta.Vp", 
+"eta.Q", "eta.KA"), c("eta.Vc", "eta.Cl", "eta.Vp", "eta.Q", 
+"eta.KA"))), time = structure(list(setup = 0.099027, optimize = 549.44587, 
+    covariance = 549.445872, table = 0.399999999999636, compress = 0.00900000000001455, 
+    other = 975.343231000001), class = "data.frame", row.names = "elapsed"), 
+    objDf = structure(list(OBJF = 24000, AIC = 32623.2646707957, 
+        BIC = 32694.2262580738, "Log-likelihood" = -16300.6323353979, 
+        "Condition#(Cov)" = 1, "Condition#(Cor)" = 1), row.names = "FOCEi", class = "data.frame"), 
+    covMethod = "r+") 

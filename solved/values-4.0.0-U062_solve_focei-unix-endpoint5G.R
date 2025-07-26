@@ -1,0 +1,28 @@
+expected_values[[runno]] <- list(lik = c(-93726364798448.1, 187452729596918, 187452729596981
+), param = c(1.6, 4.5, 1.6, 4, 0.2, 0.3), stdev_param = c(0.3873, 
+0.3873, 0.3873, 0.3873, 0.3873, NA), parFixedDf = structure(list(
+    Parameter = c("log Cl (L/hr)", "log Vc (L)", "log Q (L/hr)", 
+    "log Vp (L)", "log V (L)", ""), Estimate = c(lCl = 1.59999999874382, 
+    lVc = 4.49999999813739, lQ = 1.59999999874382, lVp = 3.99999999835398, 
+    lKA = 0.199999998137394, prop.err = 0.299999999727107), SE = c(lCl = NA_real_, 
+    lVc = NA_real_, lQ = NA_real_, lVp = NA_real_, lKA = NA_real_, 
+    prop.err = NA_real_), "%RSE" = c(NA_real_, NA_real_, NA_real_, 
+    NA_real_, NA_real_, NA_real_), "Back-transformed" = c(4.95303241817323, 
+    90.0171311328554, 4.95303241817323, 54.5981499432744, 1.22140275588518, 
+    0.299999999727107), "CI Lower" = c(NA_real_, NA_real_, NA_real_, 
+    NA_real_, NA_real_, NA_real_), "CI Upper" = c(NA_real_, NA_real_, 
+    NA_real_, NA_real_, NA_real_, NA_real_), "BSV(CV%)" = c(40.2286270044891, 
+    40.2286270044891, 40.2286270044891, 40.2286270044891, 40.2286270044891, 
+    NA), "Shrink(SD)%" = c(70.6353110440686, 46.6899536648145, 
+    79.5137258797193, 66.7850542254255, 59.7727293504558, NA)), class = "data.frame", row.names = c("lCl", 
+"lVc", "lQ", "lVp", "lKA", "prop.err")), omega = structure(c(0.150000000291219, 
+0, 0, 0, 0, 0, 0.150000000291219, 0, 0, 0, 0, 0, 0.150000000291219, 
+0, 0, 0, 0, 0, 0.150000000291219, 0, 0, 0, 0, 0, 0.150000000291219
+), dim = c(5L, 5L), dimnames = list(c("eta.Vc", "eta.Cl", "eta.Vp", 
+"eta.Q", "eta.KA"), c("eta.Vc", "eta.Cl", "eta.Vp", "eta.Q", 
+"eta.KA"))), time = structure(list(setup = 0.015067, optimize = 279.490103, 
+    covariance = 279.490104, table = 0.206000000000131, compress = 0.011000000000422, 
+    other = 9.20672600000023), class = "data.frame", row.names = "elapsed"), 
+    objDf = structure(list(OBJF = 187452729592706, AIC = 187452729596918, 
+        BIC = 187452729596981, "Log-likelihood" = -93726364798448.1), row.names = "FOCEi", class = "data.frame"), 
+    covMethod = "failed") 

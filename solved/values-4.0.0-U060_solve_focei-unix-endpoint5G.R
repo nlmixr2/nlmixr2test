@@ -1,0 +1,27 @@
+expected_values[[runno]] <- list(lik = c(-14095.18, 28212.36, 28275.41), param = c(6.3153, 
+2.0719, 1.2811, 4.8041, -0.46247, 0.81288), stdev_param = c(2.0282e+31, 
+2.0282e+31, 2.0282e+31, 2.0282e+31, 2.0282e+31, NA), parFixedDf = structure(list(
+    Parameter = c("log Cl (L/hr)", "log Vc (L)", "log Q (L/hr)", 
+    "log Vp (L)", "log V (L)", ""), Estimate = c(lCl = 6.31526833104877, 
+    lVc = 2.07186480013341, lQ = 1.28108224034831, lVp = 4.8041123394391, 
+    lKA = -0.462471513667468, prop.err = 0.812876927835076), 
+    SE = c(lCl = 94906265.6242516, lVc = 94906265.6242516, lQ = 94906265.6242516, 
+    lVp = 94906265.6242516, lKA = 94906265.6242516, prop.err = NA
+    ), "%RSE" = c(1502806542.00628, 4580717121.02741, 7408288292.12774, 
+    1975521364.16802, 20521537612.4749, NA), "Back-transformed" = c(552.950414451332, 
+    7.93961511683118, 3.60053426123032, 122.011138462547, 0.629725345821716, 
+    0.812876927835076), "CI Lower" = c(0, 0, 0, 0, 0, NA), "CI Upper" = c(Inf, 
+    Inf, Inf, Inf, Inf, NA), "BSV(CV%)" = c(Inf, Inf, Inf, Inf, 
+    Inf, NA), "Shrink(SD)%" = c(100, 100, 100, 100, 100, NA)), class = "data.frame", row.names = c("lCl", 
+"lVc", "lQ", "lVp", "lKA", "prop.err")), omega = structure(c(4.11376139330302e+62, 
+0, 0, 0, 0, 0, 4.11376139330302e+62, 0, 0, 0, 0, 0, 4.11376139330302e+62, 
+0, 0, 0, 0, 0, 4.11376139330302e+62, 0, 0, 0, 0, 0, 4.11376139330302e+62
+), dim = c(5L, 5L), dimnames = list(c("eta.Vc", "eta.Cl", "eta.Vp", 
+"eta.Q", "eta.KA"), c("eta.Vc", "eta.Cl", "eta.Vp", "eta.Q", 
+"eta.KA"))), time = structure(list(setup = 0.033503, optimize = 266.097537, 
+    covariance = 266.097539, table = 0.179000000000087, compress = 0.0100000000002183, 
+    other = 67.8014209999989), class = "data.frame", row.names = "elapsed"), 
+    objDf = structure(list(OBJF = 24000, AIC = 28212.3597114133, 
+        BIC = 28275.4109493547, "Log-likelihood" = -14095.1798557067, 
+        "Condition#(Cov)" = 1, "Condition#(Cor)" = 1), row.names = "FOCEi", class = "data.frame"), 
+    covMethod = "r+") 
