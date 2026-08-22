@@ -687,7 +687,7 @@ if (exists("runModel", globalenv())) {
   mod2 <- mod2 %>% filter(model==runModel)
 }
 
-opts <- c("focei", "saem", "nlme", "fo", "foi", "foce", "foceiLL")
+opts <- c("focei", "saem", "saemLL", "nlme", "fo", "foi", "foce", "foceiLL")
 ## opts <- c("foceiLL", "focei", "foce", "nlme", "saem")
 if (exists("runEst", globalenv())) {
   opts <- runEst
@@ -702,7 +702,7 @@ if (Sys.info()["sysname"]=="Darwin") os <- "mac"
 for (opt in opts){
   for (i in seq_along(mod2$model)){
     with(mod2[i,],{
-      if ((solve & opt %in% c("nlme","saem", "focei", "foceiLL", "nonmem743", "nonmem73")) | !solve) {
+      if ((solve & opt %in% c("nlme","saem", "saemLL", "focei", "foceiLL", "nonmem743", "nonmem73")) | !solve) {
         .msg <- sprintf("%s: %s %s-compartment %s, %s%s",model,
                         opt,
                         ifelse(cmt==1,"one","two"),
@@ -737,6 +737,9 @@ for (opt in opts){
           if (opt == "foceiLL") {
             nlmixrFn <- nlmixrFn %>% model(cp ~ prop(prop.err) + dnorm())
             .opt <- "focei"
+          } else if (opt == "saemLL") {
+            nlmixrFn <- nlmixrFn %>% model(cp ~ prop(prop.err) + dnorm())
+            .opt <- "saem"
           }
           if (opt == "nonmem743"){
             .opt <- "nonmem"
