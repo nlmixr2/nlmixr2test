@@ -475,7 +475,19 @@ pdf("compare.pdf")
 
 #try(f(nlmixrVersion, c("solve_focei", "focei"), "unix"))
 
-try(f(nlmixrVersion, c("saemLL", "saem"), "unix"))
+## try(f(nlmixrVersion, c("saemLL", "saem", "focei", "foceiLL"), "unix"))
+
+
+## try(f(nlmixrVersion, c("saem", "saemLL", "solve_saemLL", "solve_saem"), "unix"))
+
+## try(f(nlmixrVersion, c("saem", "saemLL"), "unix"))
+
+try(f(nlmixrVersion, c("solve_saem", "solve_saemLL"), "unix"))
+
+
+## try(f(nlmixrVersion, c("saemLL", "saem"), "unix"))
+
+## try(f(nlmixrVersion, c("foceiLL", "focei"), "unix"))
 
 ## try(f(nlmixrVersion, c("foceiLL", "focei"), "unix"))
 
