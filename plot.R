@@ -316,7 +316,7 @@ readData <- function(nlmixrVersion=c("4.0.0"),
   return(do.call("rbind", .ret))
 }
 
-ret <- readData(nlmixrVersion=c("4.0.0"), est=c("saem", "focei"),
+ret <- readData(nlmixrVersion=c("7.0.3"), est=c("saem", "focei"),
                 platform="unix")
 
 ## ret2 <- readData(nlmixrVersion="4.0.0", est="nonmem743", platform="unix")
@@ -328,7 +328,7 @@ library(gridExtra)
 
 xgx_theme_set()
 
-f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"),
+f <- function(nlmixrVersion=c("7.0.3"), est=c("saem", "foceiLL", "focei", "nlme"),
               platform="unix") {
 
   ret <- readData(nlmixrVersion=nlmixrVersion, est=est,
@@ -350,7 +350,7 @@ f <- function(nlmixrVersion=c("2.1.4"), est=c("saem", "foceiLL", "focei", "nlme"
                                     TRUE ~ est))
     #Central doesn't really work
     #ret <- ret %>% dplyr::filter(est != "c")
-    ret <- ret %>% dplyr::filter(est %in% c("AD", "nm", "curOde"))
+    ret <- ret %>% dplyr::filter(est %in% c("cur", "nm", "curOde"))
 
 
     linCmt <- TRUE
@@ -462,19 +462,35 @@ nlmixrVersion <-  as.character(packageVersion("nlmixr2est"))
 
 pdf("compare.pdf")
 
-try(f(nlmixrVersion, c("solve_saem", "saem"), "unix"))
+## try(f(nlmixrVersion, c("solve_saem", "saem"), "unix"))
 
-try(f(nlmixrVersion, c("solve_focei", "focei"), "unix"))
+## try(f(nlmixrVersion, c("solve_focei", "focei"), "unix"))
 
 
-try(f(nlmixrVersion, c("focei", "saem"), "unix"))
+## try(f(nlmixrVersion, c("focei", "saem"), "unix"))
 
-try(f(nlmixrVersion, c("solve_saem", "saem"), "unix"))
+## try(f(nlmixrVersion, c("solve_saem", "saem"), "unix"))
 
-try(f(nlmixrVersion, c("solve_nlme", "nlme"), "unix"))
+## try(f(nlmixrVersion, c("solve_nlme", "nlme"), "unix"))
 
-try(f(nlmixrVersion, c("foceiLL", "focei"), "unix"))
+#try(f(nlmixrVersion, c("solve_focei", "focei"), "unix"))
 
-try(f(nlmixrVersion, c("saem", "focei"), "unix"))
+## try(f(nlmixrVersion, c("saemLL", "saem", "focei", "foceiLL"), "unix"))
+
+
+## try(f(nlmixrVersion, c("saem", "saemLL", "solve_saemLL", "solve_saem"), "unix"))
+
+## try(f(nlmixrVersion, c("saem", "saemLL"), "unix"))
+
+try(f(nlmixrVersion, c("solve_saem", "solve_saemLL"), "unix"))
+
+
+## try(f(nlmixrVersion, c("saemLL", "saem"), "unix"))
+
+## try(f(nlmixrVersion, c("foceiLL", "focei"), "unix"))
+
+## try(f(nlmixrVersion, c("foceiLL", "focei"), "unix"))
+
+## try(f(nlmixrVersion, c("saem", "focei"), "unix"))
 
 dev.off()
